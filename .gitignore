@@ -1,4 +1,5 @@
 dataset/
+embeddings/
 *.pt
 *.pth
 *.h5
