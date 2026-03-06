@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VisualMatch — Image Similarity Validator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="noise-overlay"></div>
+
+  <header>
+    <div class="logo">
+      <span class="logo-mark">◈</span>
+      <span class="logo-text">VisualMatch</span>
+    </div>
+    <p class="tagline">AI-Powered Image Similarity Detection</p>
+  </header>
+
+  <main>
+    <!-- Upload Section -->
+    <section class="upload-section">
+      <div class="upload-card" id="uploadCard">
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <path d="M24 8V32M24 8L16 16M24 8L32 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 36H40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="drop-title">Drop your image here</p>
+          <p class="drop-sub">or click to browse files</p>
+          <p class="drop-formats">PNG · JPG · WEBP · GIF</p>
+          <input type="file" id="imageInput" accept="image/*" hidden />
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-area" id="previewArea" style="display:none;">
+          <div class="preview-img-wrap">
+            <img id="previewImg" src="" alt="Preview" />
+            <button class="remove-btn" id="removeBtn" title="Remove image">✕</button>
+          </div>
+          <div class="preview-meta" id="previewMeta"></div>
+        </div>
+
+        <button class="validate-btn" id="validateBtn" onclick="uploadImage()" disabled>
+          <span class="btn-text">Validate Image</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Loading -->
+    <section class="loading-section" id="loadingSection" style="display:none;">
+      <div class="loader-wrap">
+        <div class="scanner">
+          <div class="scanner-line"></div>
+          <div class="scanner-grid"></div>
+        </div>
+        <p class="loading-text">Analysing visual patterns<span class="dots"></span></p>
+        <p class="loading-sub">Comparing against database</p>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="results-section" id="resultsSection" style="display:none;">
+      <div class="results-header">
+        <div>
+          <h2 class="results-title">Similarity Results</h2>
+          <p class="results-sub" id="resultsSub">Top matches from database</p>
+        </div>
+        <button class="reset-btn" onclick="resetAll()">← New Search</button>
+      </div>
+
+      <div class="query-preview">
+        <div class="query-label">Query Image</div>
+        <img id="queryThumb" src="" alt="Query" />
+      </div>
+
+      <div class="results-grid" id="resultsGrid"></div>
+    </section>
+
+    <!-- Error -->
+    <section class="error-section" id="errorSection" style="display:none;">
+      <div class="error-card">
+        <span class="error-icon">⚠</span>
+        <h3 class="error-title">Something went wrong</h3>
+        <p class="error-msg" id="errorMsg">Unable to connect to the server.</p>
+        <button class="retry-btn" onclick="resetAll()">Try Again</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>VisualMatch · Powered by deep feature embeddings</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
