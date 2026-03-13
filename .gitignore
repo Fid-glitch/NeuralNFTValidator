@@ -1,0 +1,28 @@
+# Dataset and embeddings
+dataset/
+embeddings/
+uploads/
+
+# ML model / embeddings files
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
