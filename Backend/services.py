@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 from fastapi import UploadFile
 
-# Add parent directory to path so we can import teammate's modules
 sys.path.append(str(Path(__file__).parent.parent))
 
 try:
@@ -13,13 +12,10 @@ try:
     print("✅ Successfully loaded ML modules!")
 except ImportError as e:
     print(f"⚠️ Could not load ML modules: {e}")
-    print("Make sure embedding_manager.py and similarity_engine.py exist")
 
-# Create temp folder if it doesn't exist
 UPLOAD_DIR = Path("temp")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-# Load the ML model
 try:
     embeddings = load_or_create_embeddings()
     print("✅ ML model loaded!")
@@ -27,46 +23,61 @@ except:
     embeddings = None
     print("❌ Failed to load ML model")
 
+
+def get_verdict(score):
+    if score >= 0.90:
+        return "NOT SAFE"
+    elif score >= 0.75:
+        return "RISKY"
+    elif score >= 0.55:
+        return "MEDIUM"
+    else:
+        return "SAFE TO MINT"
+
+
 async def validate_image(file: UploadFile):
-    # Save uploaded file
     file_path = UPLOAD_DIR / file.filename
-    
+
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    
-    print(f"✅ Saved file: {file.filename}")
-    
-    # Check if model loaded
+
     if embeddings is None:
         return {
             "status": "error",
+            "verdict": "UNKNOWN",
+            "top_score": 0,
             "similar_images": [],
             "message": "ML model not loaded"
         }
-    
-    # Find similar images using teammate's code
+
     try:
         results = find_similar_images(str(file_path), embeddings)
-        
-        # Format results
+
         similar_images = []
-        for r in results[:5]:  # Top 5 only
+        for r in results[:5]:
             similar_images.append({
                 "filename": r.get("filename", "unknown"),
-                "similarity_score": r.get("score", 0.0)
+                "similarity_score": r.get("score", 0.0),
+                "image_url": r.get("image_url", "")
             })
-        
-        # Clean up temp file
+
+        top_score = similar_images[0]["similarity_score"] if similar_images else 0
+        verdict = get_verdict(top_score)
+
         file_path.unlink()
-        
+
         return {
             "status": "success",
+            "verdict": verdict,
+            "top_score": round(top_score * 100, 2),
             "similar_images": similar_images
         }
-        
+
     except Exception as e:
         return {
             "status": "error",
+            "verdict": "UNKNOWN",
+            "top_score": 0,
             "similar_images": [],
             "message": str(e)
         }

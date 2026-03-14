@@ -21,7 +21,9 @@ transform = weights.transforms()
 
 print("Loading stored embeddings...")
 
-with open("embeddings/embeddings.pkl", "rb") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(BASE_DIR, "embeddings", "embeddings.pkl"), "rb") as f:
     stored_embeddings = pickle.load(f)
 
 print("Total stored NFTs:", len(stored_embeddings))
@@ -57,7 +59,7 @@ def find_similar(query_image_path, top_k=5):
 
 
 if __name__ == "__main__":
-    base_folder = os.path.join("dataset", "originals", "witch_images")
+    base_folder = os.path.join(BASE_DIR, "dataset", "originals", "witch_images")
 
     if not os.path.exists(base_folder):
         raise Exception(f"Folder not found: {base_folder}")
